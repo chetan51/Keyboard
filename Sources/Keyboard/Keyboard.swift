@@ -95,7 +95,7 @@ public extension Keyboard where Content == KeyboardKey {
          latching: Bool = false,
          noteOn: @escaping (Pitch, CGPoint) -> Void = { _, _ in },
          noteOff: @escaping (Pitch) -> Void = { _ in },
-         model: ObservedObject<KeyboardModel>? = nil)
+         model: KeyboardModel? = nil)
     {
         self.layout = layout
         self.latching = latching
@@ -103,7 +103,7 @@ public extension Keyboard where Content == KeyboardKey {
         self.noteOff = noteOff
 
         if model != nil {
-            self.model = model!.wrappedValue
+            self.model = model!
         }
 
         var alignment: Alignment = .bottom
