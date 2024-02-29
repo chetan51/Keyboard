@@ -3,7 +3,7 @@
 import SwiftUI
 import Tonic
 
-class KeyboardModel: ObservableObject {
+public class KeyboardModel: ObservableObject {
     var keyRectInfos: [KeyRectInfo] = []
     var noteOn: (Pitch, CGPoint) -> Void = { _, _ in }
     var noteOff: (Pitch) -> Void = { _ in }
