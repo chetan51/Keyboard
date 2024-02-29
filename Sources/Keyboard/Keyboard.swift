@@ -7,7 +7,11 @@ import SwiftUI
 public struct Keyboard<Content>: View where Content: View {
     let content: (Pitch, Bool) -> Content
 
-    @StateObject var model: KeyboardModel = .init()
+    @StateObject private var internalModel: KeyboardModel = .init()
+    @ObservedObject private var overrideModel: KeyboardModel = .init()
+    private var modelOverridden = false
+
+    var model: KeyboardModel { modelOverridden ? overrideModel : internalModel }
 
     var latching: Bool
     var noteOn: (Pitch, CGPoint) -> Void
@@ -25,7 +29,7 @@ public struct Keyboard<Content>: View where Content: View {
                 latching: Bool = false,
                 noteOn: @escaping (Pitch, CGPoint) -> Void = { _, _ in },
                 noteOff: @escaping (Pitch) -> Void = { _ in },
-                model: KeyboardModel = .init(),
+                model: KeyboardModel? = nil,
                 @ViewBuilder content: @escaping (Pitch, Bool) -> Content)
     {
         self.latching = latching
@@ -33,7 +37,11 @@ public struct Keyboard<Content>: View where Content: View {
         self.noteOn = noteOn
         self.noteOff = noteOff
         self.content = content
-        _model = StateObject(wrappedValue: model)
+
+        if model != nil {
+            overrideModel = model!
+            modelOverridden = true
+        }
     }
 
     /// Body enclosing the various layout views
@@ -97,13 +105,17 @@ public extension Keyboard where Content == KeyboardKey {
          latching: Bool = false,
          noteOn: @escaping (Pitch, CGPoint) -> Void = { _, _ in },
          noteOff: @escaping (Pitch) -> Void = { _ in },
-         model: KeyboardModel = .init())
+         model: KeyboardModel? = nil)
     {
         self.layout = layout
         self.latching = latching
         self.noteOn = noteOn
         self.noteOff = noteOff
-        _model = StateObject(wrappedValue: model)
+
+        if model != nil {
+            overrideModel = model!
+            modelOverridden = true
+        }
 
         var alignment: Alignment = .bottom
 
