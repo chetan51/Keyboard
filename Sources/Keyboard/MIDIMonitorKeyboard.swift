@@ -11,16 +11,14 @@ extension GraphicsContext {
 
 @available(iOS 15, macOS 12, *)
 struct MIDIMonitorKeyboard: View {
-
     var layout: KeyboardLayout
     var activatedPitches: PitchSet
     var colorFunction: (Pitch)->Color
-    var spacer: PianoSpacer = PianoSpacer(pitchRange: Pitch(60) ... Pitch(72), initialSpacerRatio: PianoSpacer.defaultInitialSpacerRatio, spacerRatio: PianoSpacer.defaultSpacerRatio)
+    var spacer: PianoSpacer = .init(pitchRange: Pitch(60) ... Pitch(72), initialSpacerRatio: PianoSpacer.defaultInitialSpacerRatio, spacerRatio: PianoSpacer.defaultSpacerRatio)
 
     public init(layout: KeyboardLayout = .piano(pitchRange: Pitch(60) ... Pitch(72)),
                 activatedPitches: PitchSet = PitchSet(),
-                colorFunction: @escaping (Pitch)->Color = { _ in Color.red }
-    )
+                colorFunction: @escaping (Pitch)->Color = { _ in Color.red })
     {
         self.layout = layout
         self.activatedPitches = activatedPitches
@@ -41,7 +39,7 @@ struct MIDIMonitorKeyboard: View {
     public var body: some View {
         switch layout {
             case .piano:
-                
+
                 Canvas { cx, size in
                     cx.fill(rect: CGRect(origin: .zero, size: size), with: .black)
                     var color = Color.white
@@ -56,14 +54,14 @@ struct MIDIMonitorKeyboard: View {
                                        height: size.height)
                         cx.fill(rect: r, with: color)
                     }
-                    
+
                     var x: CGFloat = spacer.initialSpacerWidth(size.width)
                     if spacer.pitchRange.lowerBound != spacer.pitchRangeBoundedByNaturals.lowerBound {
                         x += spacer.lowerBoundSpacerWidth(size.width)
                     }
                     for pitch in spacer.pitchRange {
                         color = Color.black
-                        
+
                         let r = CGRect(x: x,
                                        y: 0,
                                        width: spacer.blackKeyWidth(size.width),
@@ -72,8 +70,7 @@ struct MIDIMonitorKeyboard: View {
                         if activatedPitches.contains(pitch) {
                             color = colorFunction(pitch)
                         }
-                        
-                        
+
                         if spacer.isBlackKey(pitch) {
                             cx.fill(rect: r, with: color)
                             x += spacer.blackKeyWidth(size.width)
@@ -91,11 +88,8 @@ struct MIDIMonitorKeyboard: View {
 var p = PitchSet(pitches: [Pitch(65), Pitch(68), Pitch(71), Pitch(74)])
 
 // Removing Preview macro until Xcode 15 is released
-/*
 #Preview {
-    MIDIMonitorKeyboard(layout: .piano(pitchRange: Pitch(61)...Pitch(88)),
+    MIDIMonitorKeyboard(layout: .piano(pitchRange: Pitch(61) ... Pitch(88)),
                         activatedPitches: p,
-                        colorFunction: { x in Color(cgColor: PitchColor.helmholtz[Int(x.pitchClass)])}
-    ).frame(width: 600, height: 100)
+                        colorFunction: { x in Color(cgColor: PitchColor.helmholtz[Int(x.pitchClass)]) }).frame(width: 600, height: 100)
 }
-*/
