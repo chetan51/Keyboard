@@ -25,8 +25,8 @@ public struct Keyboard<Content>: View where Content: View {
                 latching: Bool = false,
                 noteOn: @escaping (Pitch, CGPoint) -> Void = { _, _ in },
                 noteOff: @escaping (Pitch) -> Void = { _ in },
-                @ViewBuilder content: @escaping (Pitch, Bool) -> Content,
-                model: KeyboardModel = .init())
+                model: KeyboardModel = .init(),
+                @ViewBuilder content: @escaping (Pitch, Bool) -> Content)
     {
         self.latching = latching
         self.layout = layout
