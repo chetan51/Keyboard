@@ -25,13 +25,15 @@ public struct Keyboard<Content>: View where Content: View {
                 latching: Bool = false,
                 noteOn: @escaping (Pitch, CGPoint) -> Void = { _, _ in },
                 noteOff: @escaping (Pitch) -> Void = { _ in },
-                @ViewBuilder content: @escaping (Pitch, Bool) -> Content)
+                @ViewBuilder content: @escaping (Pitch, Bool) -> Content,
+                model: KeyboardModel = .init())
     {
         self.latching = latching
         self.layout = layout
         self.noteOn = noteOn
         self.noteOff = noteOff
         self.content = content
+        _model = StateObject(wrappedValue: model)
     }
 
     /// Body enclosing the various layout views
@@ -126,4 +128,10 @@ public extension Keyboard where Content == KeyboardKey {
             )
         }
     }
+}
+
+#Preview {
+    Keyboard(layout: .piano(pitchRange: Pitch(21) ... Pitch(108)))
+        .border(Color.black, width: 1)
+        .frame(width: 500, height: 100)
 }
