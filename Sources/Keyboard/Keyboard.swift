@@ -7,7 +7,7 @@ import SwiftUI
 public struct Keyboard<Content>: View where Content: View {
     let content: (Pitch, Bool) -> Content
 
-    @ObservedObject private var model: KeyboardModel = .init()
+    @StateObject private var model: KeyboardModel = .init()
 
     var latching: Bool
     var noteOn: (Pitch, CGPoint) -> Void
@@ -94,17 +94,12 @@ public extension Keyboard where Content == KeyboardKey {
     init(layout: KeyboardLayout = .piano(pitchRange: Pitch(60) ... Pitch(72)),
          latching: Bool = false,
          noteOn: @escaping (Pitch, CGPoint) -> Void = { _, _ in },
-         noteOff: @escaping (Pitch) -> Void = { _ in },
-         model: KeyboardModel? = nil)
+         noteOff: @escaping (Pitch) -> Void = { _ in })
     {
         self.layout = layout
         self.latching = latching
         self.noteOn = noteOn
         self.noteOff = noteOff
-
-        if model != nil {
-            self.model = model!
-        }
 
         var alignment: Alignment = .bottom
 
