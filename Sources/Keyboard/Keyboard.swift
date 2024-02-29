@@ -7,11 +7,7 @@ import SwiftUI
 public struct Keyboard<Content>: View where Content: View {
     let content: (Pitch, Bool) -> Content
 
-    @StateObject private var internalModel: KeyboardModel = .init()
-    @ObservedObject private var overrideModel: KeyboardModel = .init()
-    private var modelOverridden = false
-
-    var model: KeyboardModel { modelOverridden ? overrideModel : internalModel }
+    @ObservedObject private var model: KeyboardModel = .init()
 
     var latching: Bool
     var noteOn: (Pitch, CGPoint) -> Void
@@ -39,8 +35,7 @@ public struct Keyboard<Content>: View where Content: View {
         self.content = content
 
         if model != nil {
-            overrideModel = model!
-            modelOverridden = true
+            self.model = model!
         }
     }
 
@@ -113,8 +108,7 @@ public extension Keyboard where Content == KeyboardKey {
         self.noteOff = noteOff
 
         if model != nil {
-            overrideModel = model!
-            modelOverridden = true
+            self.model = model!
         }
 
         var alignment: Alignment = .bottom
