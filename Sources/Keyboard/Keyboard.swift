@@ -25,7 +25,6 @@ public struct Keyboard<Content>: View where Content: View {
                 latching: Bool = false,
                 noteOn: @escaping (Pitch, CGPoint) -> Void = { _, _ in },
                 noteOff: @escaping (Pitch) -> Void = { _ in },
-                model: KeyboardModel? = nil,
                 @ViewBuilder content: @escaping (Pitch, Bool) -> Content)
     {
         self.latching = latching
@@ -33,10 +32,6 @@ public struct Keyboard<Content>: View where Content: View {
         self.noteOn = noteOn
         self.noteOff = noteOff
         self.content = content
-
-        if model != nil {
-            self.model = model!
-        }
     }
 
     /// Body enclosing the various layout views
@@ -100,7 +95,7 @@ public extension Keyboard where Content == KeyboardKey {
          latching: Bool = false,
          noteOn: @escaping (Pitch, CGPoint) -> Void = { _, _ in },
          noteOff: @escaping (Pitch) -> Void = { _ in },
-         model: KeyboardModel? = nil)
+         model: ObservedObject<KeyboardModel>? = nil)
     {
         self.layout = layout
         self.latching = latching
@@ -108,7 +103,7 @@ public extension Keyboard where Content == KeyboardKey {
         self.noteOff = noteOff
 
         if model != nil {
-            self.model = model!
+            self.model = model!.wrappedValue
         }
 
         var alignment: Alignment = .bottom
