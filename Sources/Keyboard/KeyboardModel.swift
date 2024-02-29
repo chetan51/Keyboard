@@ -9,6 +9,8 @@ public class KeyboardModel: ObservableObject {
     var noteOff: (Pitch) -> Void = { _ in }
     var normalizedPoints = Array(repeating: CGPoint.zero, count: 128)
 
+    public init() {}
+
     var touchLocations: [CGPoint] = [] {
         didSet {
             var newPitches = PitchSet()
